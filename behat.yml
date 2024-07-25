@@ -1,0 +1,17 @@
+default:
+  extensions:
+    Behat\MinkExtension:
+      base_url: "http://localhost"
+      goutte: ~
+      selenium2: ~
+    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+      name: html
+      renderer: Twig
+      file_name: index
+      print_args: true
+      print_outp: true
+      loop_break: true
+suites:
+  default:
+    contexts:
+      - FeatureContext
