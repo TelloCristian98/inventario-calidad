@@ -1,0 +1,68 @@
+{
+    "@attributes": {
+        "name": "default"
+    },
+    "testsuite": {
+        "@attributes": {
+            "name": "Registro de clientes",
+            "tests": "4",
+            "skipped": "0",
+            "failures": "3",
+            "errors": "0",
+            "time": "1"
+        },
+        "testcase": [
+            {
+                "@attributes": {
+                    "name": "Registro exitoso de un nuevo cliente",
+                    "classname": "Registro de clientes",
+                    "status": "failed",
+                    "time": "0",
+                    "file": "features\\client_registration.feature"
+                },
+                "failure": {
+                    "@attributes": {
+                        "message": "Then deber\u00eda ver \"Registro exitoso\": The text \"Registro exitoso\" was not found anywhere in the text of the current page. (Behat\\Mink\\Exception\\ResponseTextException)"
+                    }
+                }
+            },
+            {
+                "@attributes": {
+                    "name": "Registro fallido de un cliente con c\u00e9dula duplicada",
+                    "classname": "Registro de clientes",
+                    "status": "passed",
+                    "time": "0",
+                    "file": "features\\client_registration.feature"
+                }
+            },
+            {
+                "@attributes": {
+                    "name": "Registro fallido de un cliente con campos vac\u00edos",
+                    "classname": "Registro de clientes",
+                    "status": "failed",
+                    "time": "0",
+                    "file": "features\\client_registration.feature"
+                },
+                "failure": {
+                    "@attributes": {
+                        "message": "Then deber\u00eda ver \"Por favor corrija los errores para continuar\": The text \"Por favor corrija los errores para continuar\" was not found anywhere in the text of the current page. (Behat\\Mink\\Exception\\ResponseTextException)"
+                    }
+                }
+            },
+            {
+                "@attributes": {
+                    "name": "Registro fallido de un cliente con c\u00e9dula inv\u00e1lida",
+                    "classname": "Registro de clientes",
+                    "status": "failed",
+                    "time": "0",
+                    "file": "features\\client_registration.feature"
+                },
+                "failure": {
+                    "@attributes": {
+                        "message": "Then deber\u00eda ver \"Formato invalido\": The text \"Formato invalido\" was not found anywhere in the text of the current page. (Behat\\Mink\\Exception\\ResponseTextException)"
+                    }
+                }
+            }
+        ]
+    }
+}
