@@ -9,7 +9,7 @@
             "skipped": "0",
             "failures": "3",
             "errors": "0",
-            "time": "1"
+            "time": "2"
         },
         "testcase": [
             {
@@ -17,7 +17,7 @@
                     "name": "Registro exitoso de un nuevo cliente",
                     "classname": "Registro de clientes",
                     "status": "failed",
-                    "time": "0",
+                    "time": "2",
                     "file": "features\\client_registration.feature"
                 },
                 "failure": {

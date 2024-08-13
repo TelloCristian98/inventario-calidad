@@ -1,6 +1,6 @@
 <?php
 // Ruta al archivo XML
-$xmlFilePath = __DIR__ . '/reports/junit_report.xml/default.xml';
+$xmlFilePath = __DIR__ . '/reports/cucumber_report.xml/default.xml';
 
 // Verificar si el archivo XML existe
 if (!file_exists($xmlFilePath)) {

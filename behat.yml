@@ -2,18 +2,13 @@ default:
   extensions:
     Behat\MinkExtension:
       base_url: "http://localhost/inventario-calidad"
-      goutte: ~
-      selenium2: ~
-    emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
-      name: html
-      renderer: Twig
-      file_name: index
-      print_args: true
-      print_outp: true
-      loop_break: true
+      sessions:
+        default:
+          goutte: ~
+  formatters:
+    junit:
+      output_path: reports/cucumber_report.xml
 suites:
   default:
-    json:
-      output_path: reports/cucumber_report.json
     contexts:
       - FeatureContext
