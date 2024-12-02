@@ -14,6 +14,7 @@
         "behat/mink-extension": "^2.3",
         "behat/mink-goutte-driver": "^1.2",
         "behat/mink-selenium2-driver": "^1.4",
-        "emuse/behat-html-formatter": "^1.0"
+        "emuse/behat-html-formatter": "^1.0",
+        "phpunit/phpunit": "^11.4"
     }
 }
