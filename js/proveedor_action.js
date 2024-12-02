@@ -80,12 +80,14 @@ $(".deleteBtn").on("click", function () {
   $(this).closest("tr").find(".deleteBtn").hide();
   $(this).closest("tr").css("background-color", "#ffb0b0");
   var ID = $(this).closest("tr").attr("id");
+  console.log(ID);
   $.ajax({
     data: "action=delete&id=" + ID,
     url: "proveedor_action.php",
     type: "post",
     success: function (result) {
       var response = JSON.parse(result);
+      // console.log(response);
       if (response.status == 1) {
         $(".resultados").html(response.msg);
         trObj.find(".editSpan.password").text(response.data);

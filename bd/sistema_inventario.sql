@@ -2,34 +2,30 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 05, 2023 at 09:06 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
-
-create database if not exists sistema_inventario;
-
-use sistema_inventario;
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 02-12-2024 a las 02:47:11
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-
 --
--- Database: `sistema_inventario`
+-- Base de datos: `sistema_inventario`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procedimientos
 --
-CREATE PROCEDURE `actualizar_precio_material` (IN `n_cantidad` DECIMAL, IN `n_precio` DECIMAL(10,2), IN `codigo_material` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_precio_material` (IN `n_cantidad` DECIMAL, IN `n_precio` DECIMAL(10,2), IN `codigo_material` INT)   BEGIN
     	DECLARE nueva_existencia decimal(10,2);
         DECLARE nuevo_total decimal(10,2);
         DECLARE nuevo_precio decimal(10,2);
@@ -45,7 +41,7 @@ CREATE PROCEDURE `actualizar_precio_material` (IN `n_cantidad` DECIMAL, IN `n_pr
         SELECT nueva_existencia, nuevo_precio, nuevo_total;
     END$$
 
-CREATE PROCEDURE `add_producto_temp` (`codigo_mateiral` INT, `cantidad_material` INT, `token_user` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_producto_temp` (`codigo_mateiral` INT, `cantidad_material` INT, `token_user` VARCHAR(50))   BEGIN
     	DECLARE precio_actual decimal(10,2);
         SELECT CostoPorUnidad_Material INTO precio_actual FROM material WHERE material.Id_Material = codigo_mateiral;
         INSERT INTO producto_temp(Id_Material_Prod_temp, Id_Usuario_Prod_temp, Existencia_Prod_temp, PrecioUnit_Prod_temp) VALUES (codigo_mateiral, token_user, cantidad_material, precio_actual);
@@ -53,12 +49,12 @@ CREATE PROCEDURE `add_producto_temp` (`codigo_mateiral` INT, `cantidad_material`
         SELECT producto_temp.Id_Producto_temp, producto_temp.Id_Material_Prod_temp, material.Nombre_Material, producto_temp.Existencia_Prod_temp, producto_temp.PrecioUnit_Prod_temp FROM producto_temp INNER JOIN material ON producto_temp.Id_Material_Prod_temp = material.Id_Material WHERE producto_temp.Id_Usuario_Prod_temp = token_user;
     END$$
 
-CREATE PROCEDURE `del_producto_temp` (`id_producto_temp` INT, `token_user` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `del_producto_temp` (`id_producto_temp` INT, `token_user` VARCHAR(50))   BEGIN
     	DELETE FROM producto_temp WHERE producto_temp.Id_Producto_temp = id_producto_temp;
         SELECT producto_temp.Id_Producto_temp, producto_temp.Id_Material_Prod_temp, material.Nombre_Material, producto_temp.Existencia_Prod_temp, producto_temp.PrecioUnit_Prod_temp FROM producto_temp INNER JOIN material ON producto_temp.Id_Material_Prod_temp = material.Id_Material WHERE producto_temp.Id_Usuario_Prod_temp = token_user;
     END$$
 
-CREATE PROCEDURE `procesar_producto` (IN `id_usuario` INT, IN `desc_producto` VARCHAR(50), IN `foto_producto` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `procesar_producto` (IN `id_usuario` INT, IN `desc_producto` VARCHAR(50), IN `foto_producto` TEXT)   BEGIN
     	DECLARE producto int;
         DECLARE kardex int;
         DECLARE material int;
@@ -128,7 +124,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -144,19 +140,20 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `cliente`
+-- Volcado de datos para la tabla `cliente`
 --
 
 INSERT INTO `cliente` (`Id_Cliente`, `CI_Cliente`, `Nombre_Cliente`, `Apellido_Cliente`, `Telefono_Cliente`, `Direccion_Cliente`, `Estado_Cliente`, `Dateadd_Cliente`, `Id_Usuario`) VALUES
-(30000, '17111457896', 'Jaime', 'Estrada', '0985542638', '25 de Noviembre y Maldonado', 1, '2023-08-22 22:00:46', 10000),
+(30000, '17111457896', 'Jaime', 'Valencia', '0985542638', '25 de Noviembre y Maldonado', 1, '2023-08-22 22:00:46', 10000),
 (30002, '1711153709', 'Juan', 'Perez', '1234567890', '25 de noviembre', 1, '2023-08-23 18:59:38', 10000),
 (30003, '1721286543', 'Jaime', 'Aimara', '0978852456', 'El calzado', 1, '2023-08-28 18:38:58', 10000),
-(30004, '1787848203', 'Carmen', 'Encalada', '0975542163', 'El calzado', 1, '2023-09-04 14:04:28', 10000);
+(30004, '1787848203', 'Carmen', 'Encalada', '0975542163', 'El calzado', 1, '2023-09-04 14:04:28', 10000),
+(30005, '1721265434', 'Ernesto', 'Elver', '0976654317', 'Ponciano alto', 1, '2024-11-27 21:03:42', 10000);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `configuracion`
+-- Estructura de tabla para la tabla `configuracion`
 --
 
 CREATE TABLE `configuracion` (
@@ -171,7 +168,7 @@ CREATE TABLE `configuracion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `configuracion`
+-- Volcado de datos para la tabla `configuracion`
 --
 
 INSERT INTO `configuracion` (`Id_Conf`, `CI_Conf`, `Nombre_Conf`, `RazonSocial_Conf`, `Telefono_Conf`, `Email_Conf`, `Direccion_Conf`, `IVA_Conf`) VALUES
@@ -180,7 +177,7 @@ INSERT INTO `configuracion` (`Id_Conf`, `CI_Conf`, `Nombre_Conf`, `RazonSocial_C
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura`
+-- Estructura de tabla para la tabla `factura`
 --
 
 CREATE TABLE `factura` (
@@ -195,7 +192,7 @@ CREATE TABLE `factura` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura_detalle`
+-- Estructura de tabla para la tabla `factura_detalle`
 --
 
 CREATE TABLE `factura_detalle` (
@@ -209,7 +206,7 @@ CREATE TABLE `factura_detalle` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura_temp`
+-- Estructura de tabla para la tabla `factura_temp`
 --
 
 CREATE TABLE `factura_temp` (
@@ -223,7 +220,7 @@ CREATE TABLE `factura_temp` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kardex`
+-- Estructura de tabla para la tabla `kardex`
 --
 
 CREATE TABLE `kardex` (
@@ -242,7 +239,7 @@ CREATE TABLE `kardex` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `kardex`
+-- Volcado de datos para la tabla `kardex`
 --
 
 INSERT INTO `kardex` (`Id_Kardex`, `Id_Usuario`, `Id_Material`, `Fecha_K`, `Desc_K`, `Valor_Unit_K`, `Cantidad_Ent_K`, `Valor_Ent_K`, `Cantidad_Sal_K`, `Valor_Sal_K`, `Cantidad_Saldo_k`, `Valor_Saldo_K`) VALUES
@@ -267,7 +264,7 @@ INSERT INTO `kardex` (`Id_Kardex`, `Id_Usuario`, `Id_Material`, `Fecha_K`, `Desc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `material`
+-- Estructura de tabla para la tabla `material`
 --
 
 CREATE TABLE `material` (
@@ -282,7 +279,7 @@ CREATE TABLE `material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `material`
+-- Volcado de datos para la tabla `material`
 --
 
 INSERT INTO `material` (`Id_Material`, `Id_Unidad`, `Id_Usuario`, `Nombre_Material`, `CostoPorUnidad_Material`, `Existencia_Material`, `Estado_Material`, `Dateadd_Material`) VALUES
@@ -290,7 +287,7 @@ INSERT INTO `material` (`Id_Material`, `Id_Unidad`, `Id_Usuario`, `Nombre_Materi
 (50013, 40000, 10000, 'Rodamiento', 1.99, 71, 1, '2023-08-25 08:04:51');
 
 --
--- Triggers `material`
+-- Disparadores `material`
 --
 DELIMITER $$
 CREATE TRIGGER `kardex_after_insert_materiales` AFTER INSERT ON `material` FOR EACH ROW BEGIN
@@ -303,7 +300,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto`
+-- Estructura de tabla para la tabla `producto`
 --
 
 CREATE TABLE `producto` (
@@ -318,7 +315,7 @@ CREATE TABLE `producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `producto`
+-- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `producto` (`Id_Producto`, `Id_Usuario_Prod`, `Desc_Producto`, `Existencia_Prod`, `PrecioUnit_Prod`, `Foto_Prod`, `dateadd_Prod`, `Estado_Prod`) VALUES
@@ -330,7 +327,7 @@ INSERT INTO `producto` (`Id_Producto`, `Id_Usuario_Prod`, `Desc_Producto`, `Exis
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_detalle`
+-- Estructura de tabla para la tabla `producto_detalle`
 --
 
 CREATE TABLE `producto_detalle` (
@@ -342,7 +339,7 @@ CREATE TABLE `producto_detalle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `producto_detalle`
+-- Volcado de datos para la tabla `producto_detalle`
 --
 
 INSERT INTO `producto_detalle` (`Id_Producto_Detalle`, `Id_Producto_Prod`, `Id_Material_Prod_Detalle`, `Existencia_Prod_Detalle`, `PrecioUnit_Prod_Detalle`) VALUES
@@ -358,7 +355,7 @@ INSERT INTO `producto_detalle` (`Id_Producto_Detalle`, `Id_Producto_Prod`, `Id_M
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto_temp`
+-- Estructura de tabla para la tabla `producto_temp`
 --
 
 CREATE TABLE `producto_temp` (
@@ -369,18 +366,33 @@ CREATE TABLE `producto_temp` (
   `PrecioUnit_Prod_temp` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `producto_temp`
+-- Estructura de tabla para la tabla `proveedores`
 --
 
-INSERT INTO `producto_temp` (`Id_Producto_temp`, `Id_Material_Prod_temp`, `Id_Usuario_Prod_temp`, `Existencia_Prod_temp`, `PrecioUnit_Prod_temp`) VALUES
-(80090, 50012, 10000, 1, 17.24),
-(80091, 50013, 10000, 5, 1.99);
+CREATE TABLE `proveedores` (
+  `Id_Proveedor` int(11) NOT NULL,
+  `Nombre_Proveedor` varchar(100) NOT NULL,
+  `Direccion_Proveedor` varchar(100) NOT NULL,
+  `Telefono_Proveedor` varchar(100) NOT NULL,
+  `Email_Proveedor` varchar(100) NOT NULL,
+  `Estado_Proveedor` int(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `proveedores`
+--
+
+INSERT INTO `proveedores` (`Id_Proveedor`, `Nombre_Proveedor`, `Direccion_Proveedor`, `Telefono_Proveedor`, `Email_Proveedor`, `Estado_Proveedor`) VALUES
+(2, 'Favorita', 'Amazonas y 6 de diciembre', '0976658323', 'proveedor@favorita.com', 1),
+(3, 'Nestle', 'Republica del Salvador', '0975563482', 'proveedor@nestle.com', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rolusuario`
+-- Estructura de tabla para la tabla `rolusuario`
 --
 
 CREATE TABLE `rolusuario` (
@@ -389,7 +401,7 @@ CREATE TABLE `rolusuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `rolusuario`
+-- Volcado de datos para la tabla `rolusuario`
 --
 
 INSERT INTO `rolusuario` (`Id_Rol`, `Rol`) VALUES
@@ -401,7 +413,7 @@ INSERT INTO `rolusuario` (`Id_Rol`, `Rol`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unidad`
+-- Estructura de tabla para la tabla `unidad`
 --
 
 CREATE TABLE `unidad` (
@@ -411,7 +423,7 @@ CREATE TABLE `unidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `unidad`
+-- Volcado de datos para la tabla `unidad`
 --
 
 INSERT INTO `unidad` (`Id_Unidad`, `Nombre_Unidad`, `Nombre_Unidades`) VALUES
@@ -422,7 +434,7 @@ INSERT INTO `unidad` (`Id_Unidad`, `Nombre_Unidad`, `Nombre_Unidades`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `usuario`
+-- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -438,7 +450,7 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `usuario`
+-- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`Id_Usuario`, `Id_Rol_Us`, `Nombre_Usuario`, `Apellido_Usuario`, `Correo_Usuario`, `Usuario`, `Clave_Usuario`, `Estado_Usuario`, `Foto_Usuario`) VALUES
@@ -454,24 +466,24 @@ INSERT INTO `usuario` (`Id_Usuario`, `Id_Rol_Us`, `Nombre_Usuario`, `Apellido_Us
 (10019, 20001, 'Pedro', 'Manrique', 'pedro@email.com', 'pedro123', 'd3ce9efea6244baa7bf718f12dd0c331', 1, 'tree-removebg.png');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `cliente`
+-- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`Id_Cliente`),
   ADD KEY `Id_Usuario` (`Id_Usuario`);
 
 --
--- Indexes for table `configuracion`
+-- Indices de la tabla `configuracion`
 --
 ALTER TABLE `configuracion`
   ADD PRIMARY KEY (`Id_Conf`);
 
 --
--- Indexes for table `factura`
+-- Indices de la tabla `factura`
 --
 ALTER TABLE `factura`
   ADD PRIMARY KEY (`Id_Factura`),
@@ -479,7 +491,7 @@ ALTER TABLE `factura`
   ADD KEY `Id_Cliente_Fac` (`Id_Cliente_Fac`);
 
 --
--- Indexes for table `factura_detalle`
+-- Indices de la tabla `factura_detalle`
 --
 ALTER TABLE `factura_detalle`
   ADD PRIMARY KEY (`Id_Factura_Det`),
@@ -487,7 +499,7 @@ ALTER TABLE `factura_detalle`
   ADD KEY `Id_Producto_Fac_Det` (`Id_Producto_Fac_Det`);
 
 --
--- Indexes for table `factura_temp`
+-- Indices de la tabla `factura_temp`
 --
 ALTER TABLE `factura_temp`
   ADD PRIMARY KEY (`Id_Factura_Temp`),
@@ -495,7 +507,7 @@ ALTER TABLE `factura_temp`
   ADD KEY `Id_Factura_Temp_Prod` (`Id_Factura_Temp_Prod`);
 
 --
--- Indexes for table `kardex`
+-- Indices de la tabla `kardex`
 --
 ALTER TABLE `kardex`
   ADD PRIMARY KEY (`Id_Kardex`),
@@ -503,7 +515,7 @@ ALTER TABLE `kardex`
   ADD KEY `Id_Material` (`Id_Material`);
 
 --
--- Indexes for table `material`
+-- Indices de la tabla `material`
 --
 ALTER TABLE `material`
   ADD PRIMARY KEY (`Id_Material`),
@@ -511,14 +523,14 @@ ALTER TABLE `material`
   ADD KEY `Id_Usuario` (`Id_Usuario`);
 
 --
--- Indexes for table `producto`
+-- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`Id_Producto`),
   ADD KEY `Id_Usuario_Prod` (`Id_Usuario_Prod`);
 
 --
--- Indexes for table `producto_detalle`
+-- Indices de la tabla `producto_detalle`
 --
 ALTER TABLE `producto_detalle`
   ADD PRIMARY KEY (`Id_Producto_Detalle`),
@@ -526,7 +538,7 @@ ALTER TABLE `producto_detalle`
   ADD KEY `Id_Material_Prod_Detalle` (`Id_Material_Prod_Detalle`);
 
 --
--- Indexes for table `producto_temp`
+-- Indices de la tabla `producto_temp`
 --
 ALTER TABLE `producto_temp`
   ADD PRIMARY KEY (`Id_Producto_temp`),
@@ -534,173 +546,185 @@ ALTER TABLE `producto_temp`
   ADD KEY `Id_Usuario_Prod_temp` (`Id_Usuario_Prod_temp`);
 
 --
--- Indexes for table `rolusuario`
+-- Indices de la tabla `proveedores`
+--
+ALTER TABLE `proveedores`
+  ADD PRIMARY KEY (`Id_Proveedor`);
+
+--
+-- Indices de la tabla `rolusuario`
 --
 ALTER TABLE `rolusuario`
   ADD PRIMARY KEY (`Id_Rol`);
 
 --
--- Indexes for table `unidad`
+-- Indices de la tabla `unidad`
 --
 ALTER TABLE `unidad`
   ADD PRIMARY KEY (`Id_Unidad`);
 
 --
--- Indexes for table `usuario`
+-- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`Id_Usuario`),
   ADD KEY `Id_Rol_Us` (`Id_Rol_Us`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `cliente`
+-- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `Id_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30005;
+  MODIFY `Id_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30006;
 
 --
--- AUTO_INCREMENT for table `configuracion`
+-- AUTO_INCREMENT de la tabla `configuracion`
 --
 ALTER TABLE `configuracion`
   MODIFY `Id_Conf` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `factura`
+-- AUTO_INCREMENT de la tabla `factura`
 --
 ALTER TABLE `factura`
   MODIFY `Id_Factura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110000;
 
 --
--- AUTO_INCREMENT for table `factura_detalle`
+-- AUTO_INCREMENT de la tabla `factura_detalle`
 --
 ALTER TABLE `factura_detalle`
   MODIFY `Id_Factura_Det` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120000;
 
 --
--- AUTO_INCREMENT for table `factura_temp`
+-- AUTO_INCREMENT de la tabla `factura_temp`
 --
 ALTER TABLE `factura_temp`
   MODIFY `Id_Factura_Temp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130000;
 
 --
--- AUTO_INCREMENT for table `kardex`
+-- AUTO_INCREMENT de la tabla `kardex`
 --
 ALTER TABLE `kardex`
   MODIFY `Id_Kardex` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60067;
 
 --
--- AUTO_INCREMENT for table `material`
+-- AUTO_INCREMENT de la tabla `material`
 --
 ALTER TABLE `material`
   MODIFY `Id_Material` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50014;
 
 --
--- AUTO_INCREMENT for table `producto`
+-- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
   MODIFY `Id_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90016;
 
 --
--- AUTO_INCREMENT for table `producto_detalle`
+-- AUTO_INCREMENT de la tabla `producto_detalle`
 --
 ALTER TABLE `producto_detalle`
   MODIFY `Id_Producto_Detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100038;
 
 --
--- AUTO_INCREMENT for table `producto_temp`
+-- AUTO_INCREMENT de la tabla `producto_temp`
 --
 ALTER TABLE `producto_temp`
-  MODIFY `Id_Producto_temp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80092;
+  MODIFY `Id_Producto_temp` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80093;
 
 --
--- AUTO_INCREMENT for table `rolusuario`
+-- AUTO_INCREMENT de la tabla `proveedores`
+--
+ALTER TABLE `proveedores`
+  MODIFY `Id_Proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `rolusuario`
 --
 ALTER TABLE `rolusuario`
   MODIFY `Id_Rol` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20004;
 
 --
--- AUTO_INCREMENT for table `unidad`
+-- AUTO_INCREMENT de la tabla `unidad`
 --
 ALTER TABLE `unidad`
   MODIFY `Id_Unidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40003;
 
 --
--- AUTO_INCREMENT for table `usuario`
+-- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   MODIFY `Id_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10020;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `cliente`
+-- Filtros para la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `factura`
+-- Filtros para la tabla `factura`
 --
 ALTER TABLE `factura`
   ADD CONSTRAINT `Factura-Cliente` FOREIGN KEY (`Id_Cliente_Fac`) REFERENCES `cliente` (`Id_Cliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Factura-Usuario` FOREIGN KEY (`Id_Usuario_Fac`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `factura_detalle`
+-- Filtros para la tabla `factura_detalle`
 --
 ALTER TABLE `factura_detalle`
   ADD CONSTRAINT `FacturaDet-Factura` FOREIGN KEY (`Id_Factura`) REFERENCES `factura` (`Id_Factura`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FacturaDet-Producto` FOREIGN KEY (`Id_Producto_Fac_Det`) REFERENCES `producto` (`Id_Producto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `factura_temp`
+-- Filtros para la tabla `factura_temp`
 --
 ALTER TABLE `factura_temp`
   ADD CONSTRAINT `FacturaTemp-Producto` FOREIGN KEY (`Id_Factura_Temp_Prod`) REFERENCES `producto` (`Id_Producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FacturaTemp-Usuario` FOREIGN KEY (`Id_Factura_Temp_Usuario`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `kardex`
+-- Filtros para la tabla `kardex`
 --
 ALTER TABLE `kardex`
   ADD CONSTRAINT `Kardex-Material` FOREIGN KEY (`Id_Material`) REFERENCES `material` (`Id_Material`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Kardex-Usuario` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `material`
+-- Filtros para la tabla `material`
 --
 ALTER TABLE `material`
   ADD CONSTRAINT `Material-Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `unidad` (`Id_Unidad`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Material-Usuario` FOREIGN KEY (`Id_Usuario`) REFERENCES `usuario` (`Id_Usuario`);
 
 --
--- Constraints for table `producto`
+-- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD CONSTRAINT `Producto-Usuario` FOREIGN KEY (`Id_Usuario_Prod`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `producto_detalle`
+-- Filtros para la tabla `producto_detalle`
 --
 ALTER TABLE `producto_detalle`
   ADD CONSTRAINT `Producto-Material-Detalle` FOREIGN KEY (`Id_Material_Prod_Detalle`) REFERENCES `material` (`Id_Material`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Producto-Producto` FOREIGN KEY (`Id_Producto_Prod`) REFERENCES `producto` (`Id_Producto`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `producto_temp`
+-- Filtros para la tabla `producto_temp`
 --
 ALTER TABLE `producto_temp`
   ADD CONSTRAINT `Producto-Material-Temp` FOREIGN KEY (`Id_Material_Prod_temp`) REFERENCES `material` (`Id_Material`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `Producto-Usuario-Temp` FOREIGN KEY (`Id_Usuario_Prod_temp`) REFERENCES `usuario` (`Id_Usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `usuario`
+-- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `Rol-Usuario` FOREIGN KEY (`Id_Rol_Us`) REFERENCES `rolusuario` (`Id_Rol`) ON DELETE CASCADE ON UPDATE CASCADE;

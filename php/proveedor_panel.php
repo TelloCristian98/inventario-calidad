@@ -26,7 +26,7 @@ include('parts/head.php');
                 <input type="text" class="campo" name="campo" id="campo" placeholder="Puedes buscar por Nombre, Direccion, Telefono, Email" />
             </div>
         </div>
-        <!-- Mostrar Clientes -->
+        <!-- Mostrar Proveedores -->
         <div class="recent-orders">
             <table>
                 <thead>
@@ -60,8 +60,8 @@ include('parts/head.php');
                     $items = array();
                     if ($row > 0) {
                         while ($row = mysqli_fetch_array($ret)) {
-                            // if ($row['Estado_Cliente'] == 1) {
-                            if (1) {
+                            if ($row['Estado_Proveedor'] == 1) {
+                            // if (1) {
                                 $estado_text = "Activo";
                                 $color_row = "";
                                 $display = "";
@@ -137,7 +137,7 @@ include('parts/head.php');
             </table>
         </div>
 
-        <!-- Registrar Cliente -->
+        <!-- Registrar Proveedor -->
         <div id="form-cliente" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>

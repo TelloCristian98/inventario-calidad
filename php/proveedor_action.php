@@ -52,22 +52,26 @@ if (isset($_POST['action'])) {
                 'msg' => $msg,
             );
         }
+        echo $response;
         echo json_encode($response);
         exit();
     } elseif ($_POST['action'] == 'delete') {
         $id_proveedor = $_POST['id'];
-        $sql = "DELETE FROM proveedores WHERE Id_Proveedor = $id_proveedor";
-        $result = mysqli_query($con, $sql);
-        if ($result) {
+        $sql = mysqli_query($con, "UPDATE proveedores SET Estado_Proveedor=0 WHERE Id_Proveedor=$rid");
+        // $result = mysqli_fetch_array($sql);
+        // echo $sql;
+        if ($sql) {
             $response = array(
                 'status' => 1,
-                'msg' => 'Proveedor eliminado correctamente',
+                'msg' => 'Proveedor desactivado correctamente',
+                'data' => 'Inactivo',
             );
         } else {
-            $msg = 'Error eliminando proveedor: ' . mysqli_error($con);
+            $msg = 'Error desactivando proveedor:' . mysqli_error($con);
             $response = array(
                 'status' => 0,
                 'msg' => $msg,
+                'data' => 'Activo',
             );
         }
         echo json_encode($response);
